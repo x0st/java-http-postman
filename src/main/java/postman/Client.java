@@ -135,7 +135,6 @@ public class Client implements AutoCloseable {
             }
 
             connection.setUseCaches(false);
-            connection.setDoOutput(true);
 
             // 4: WRITE BODY
             if (!request.getMethod().equals("GET") && !request.getMethod().equals("HEAD")) {

@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import postman.request.RequestInterface;
 import postman.response.JSONArrayResponse;
 import postman.response.JSONObjectResponse;
+import postman.response.BodyLessResponse;
 import postman.response.Response;
 import postman.response.StringResponse;
 
@@ -82,6 +83,45 @@ public class Client implements AutoCloseable {
         this.threads.add(thread);
 
         thread.start();
+    }
+
+    public void asBodyLessAsync(final RequestInterface request, final Listener<String> listener, final ErrorListener errorListener) {
+        Thread thread = new Thread(new Runnable() {
+            public void run() {
+                try {
+                    BodyLessResponse response = Client.this.asBodyLess(request);
+
+                    if (response.getStatusCode() >= 400) {
+                        listener.error(response);
+                    }
+
+                    if (response.getStatusCode() < 300) {
+                        listener.success(response);
+                    }
+
+                } catch (PostmanException e) {
+                    errorListener.exception(e);
+                }
+            }
+        });
+
+        this.threads.add(thread);
+
+        thread.start();
+    }
+
+    public BodyLessResponse asBodyLess(final RequestInterface request) throws PostmanException {
+        try {
+            StringResponse stringResponse = this.performRequest(request);
+
+            return new BodyLessResponse(
+                stringResponse.getStatusCode(),
+                null,
+                stringResponse.getHeaders()
+            );
+        } catch (IOException e) {
+            throw new PostmanException(e);
+        }
     }
 
     public JSONArrayResponse asJSONArray(final RequestInterface request) throws PostmanException {

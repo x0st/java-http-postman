@@ -6,7 +6,8 @@
 
     <groupId>postman</groupId>
     <artifactId>http-postman</artifactId>
-    <version>0.4</version>
+    <version>alpha</version>
+
     <build>
         <plugins>
             <plugin>

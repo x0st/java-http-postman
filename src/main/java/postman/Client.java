@@ -177,7 +177,11 @@ public class Client implements AutoCloseable {
             connection.setUseCaches(false);
 
             // 4: WRITE BODY
-            if (!request.getMethod().equals("GET") && !request.getMethod().equals("HEAD")) {
+            if (
+                    !request.getMethod().equals("GET") &&
+                    !request.getMethod().equals("HEAD") &&
+                    !request.getMethod().equals("DELETE") &&
+                    request.getBody() != null) {
                 DataOutputStream wr = new DataOutputStream(connection.getOutputStream());
                 wr.writeBytes(String.valueOf(request.getBody()));
                 wr.close();

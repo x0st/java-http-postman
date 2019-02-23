@@ -20,6 +20,6 @@ public class JSONObjectRequest extends AbstractRequest {
     }
 
     public String getBody() {
-        return this.body.toString();
+        return body != null ? this.body.toString() : null;
     }
 }
